@@ -1,6 +1,7 @@
 using Institution.Domain.Entities;
 using Institution.Domain.Interfaces;
 using Institution.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Institution.Infrastructure.Repositories;
 
@@ -8,28 +9,44 @@ public class InscriptionRepository : IRepository<Inscription>
 {
     private readonly AppDbContext _context;
 
-    public CourseRepository(AppDbContext context)
+    public InscriptionRepository(AppDbContext context)
     {
         _context = context;
     }
     
-    public Task<IEnumerable<Inscription>> GetAll()
+    public async Task<IEnumerable<Inscription>> GetAll()
     {
-        throw new NotImplementedException();
+        var inscription = await _context.Inscriptions.ToListAsync();
+        return inscription;
     }
 
-    public Task<Inscription> Create(Inscription entity)
+    public async Task<Inscription> Create(Inscription entity)
     {
-        throw new NotImplementedException();
+        var entry = _context.Inscriptions.Add(entity);
+        await _context.SaveChangesAsync();
+        return entity;
     }
 
-    public Task<Inscription> Update(int Id, Inscription entity)
+    public async Task<Inscription> Update(int Id, Inscription entity)
     {
-        throw new NotImplementedException();
+        var requested = await _context.Inscriptions.FirstOrDefaultAsync(i => i.Id == Id);
+        if (requested == null) return null;
+
+        requested.CourseId = entity.CourseId;
+        requested.StudentId = entity.StudentId;
+
+        _context.Inscriptions.Update(requested);
+        await _context.SaveChangesAsync();
+
+        return requested;
     }
 
-    public Task<bool> Delete(int Id)
+    public async Task<bool> Delete(int Id)
     {
-        throw new NotImplementedException();
+        var existingInscription = _context.Inscriptions.FirstOrDefault(s => s.Id == Id);
+        if (existingInscription == null) return false;
+        _context.Inscriptions.Remove(existingInscription);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

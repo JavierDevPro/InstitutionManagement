@@ -54,4 +54,9 @@ public class ProfessorRepository : IRepository<Professor>
         await _context.SaveChangesAsync();
         return true;
     }
+    public async Task<bool> AlreadyExist(int Id)
+    {
+        var request = await _context.Professors.FirstOrDefaultAsync(c => c.Id == Id);
+        return (request == null) ? false : true;
+    }
 }
