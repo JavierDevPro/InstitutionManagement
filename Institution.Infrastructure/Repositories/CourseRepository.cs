@@ -27,20 +27,33 @@ public class CourseRepository : IRepository<Course>
         return entity;
     }
 
-    public Task<Course> Update(int Id, Course entity)
+    public async Task<Course> Update(int Id, Course entity)
     {
+        var requested = await _context.Courses.FirstOrDefaultAsync(c => c.Id == Id);
+        if (requested == null) return null;
 
-        return null
+        requested.Name = entity.Name;
+        requested.Description = entity.Description;
+        requested.Duration = entity.Duration;
+        requested.Capacity = entity.Capacity;
+        requested.ProfessorId = entity.ProfessorId;
+        requested.StatusId = entity.StatusId;
+        requested.DateStart = entity.DateStart;
+        requested.DateEnd = entity.DateEnd;
+        requested.DateUpdate = DateOnly.FromDateTime(DateTime.Now);
+
+        await _context.SaveChangesAsync();
+
+        return requested;
     }
 
-    public async Task<bool> AlreadyExist(int Id)
+    public async Task<bool> Delete(int Id)
     {
-        var request = await 
-    }
-
-    public Task<bool> Delete(int Id)
-    {
-        throw new NotImplementedException();
+        var existingCourse = _context.Courses.FirstOrDefault(s => s.Id == Id);
+        if (existingCourse == null) return false;
+        _context.Courses.Remove(existingCourse);
+        await _context.SaveChangesAsync();
+        return true;
     }
     public async Task<Course> ShowDetail(Course entity)
     {
@@ -50,5 +63,11 @@ public class CourseRepository : IRepository<Course>
             .FirstOrDefaultAsync(c => c == entity);
 
         return course;
+    }
+    
+    public async Task<bool> AlreadyExist(int Id)
+    {
+        var request = await _context.Courses.FirstOrDefaultAsync(c => c.Id == Id);
+        return (request == null) ? false : true;
     }
 }
