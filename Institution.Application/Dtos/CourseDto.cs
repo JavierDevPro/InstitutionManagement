@@ -17,6 +17,7 @@ public class CourseDto
     public DateOnly DateCreation { get; set; }
     public DateOnly DateUpdate { get; set; }
 }
+
 public class CourseCreationDto
 {
     public string Name { get; set; } = string.Empty;
