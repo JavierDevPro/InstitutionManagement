@@ -28,6 +28,8 @@ public class ProfessorCreateDto
     public bool IsActive { get; set; }
     
     public DateOnly BirthDate {get; set;}
+    
+    public string Speciality { get; set; }
 }
 
 public class ProfessorUpdateDto
@@ -37,6 +39,8 @@ public class ProfessorUpdateDto
     public string Document {get; set;}
     public string Email {get; set;}
     public string? PhoneNumber {get; set;}
+    
+    public string Speciality { get; set; }
 
     public bool IsActive { get; set; }
 

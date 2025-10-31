@@ -9,7 +9,7 @@ namespace Institution.Application.Services;
 public class StudentService : IStudentService
 {
     private readonly IRepository<Student> _repository;
-
+    
     public StudentService(IRepository<Student> repository)
     {
         _repository = repository;
